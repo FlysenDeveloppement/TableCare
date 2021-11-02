@@ -119,19 +119,102 @@ actualTable = TableCare:LoadCareFor(actualTable, "My New Name Is This", 0) -- Ar
 actualTable = TableCare:UnloadCareFor(actualTable) -- turn off new parameters...
 ```
 
-### TableCare:TrackIndexPlayer(table, optional_bind_id, player, optional_erase) --> arg1: table, arg2: string or boolean, arg3: player or player_name (string), optional_instance: boolean
+### TableCare:TrackIndexPlayer(table, optional_bind_id, player, optional_erase) --> arg1: table, arg2: string or nil, arg3: player or player_name (string), optional_instance: boolean
 This function allow you to know when a player is set to your table. 
 ```lua
-  local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
-  local table1 = {}
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local table1 = {}
   
-  table1, event, bind_id = TableCare:TrackIndexPlayer(table1, nil, "Tom_minecraft", false)
-  
-  event:Connect(function(player)
-      print("Plaeyr is set to the table")
-  end)
+table1, event, bind_id = TableCare:TrackIndexPlayer(table1, nil, "Tom_minecraft", false)
+
+event:Connect(function(player)
+    print("Plaeyr is set to the table")
+end)
 ```
 **TableCare:UntrackIndexPlayer(bind_id) is used to stop the event.. (unbind).**
+
+### TableCare:TrackIndexInstance(table1, instance, optional_bind_id, optional_erase) --> arg1: table, arg2: InstanceType (string format), arg3: number or nil, arg4: boolean
+Allow you to know when an Instance is set for your table.
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local track_instance_table, event, bind_id = TableCare:TrackIndexInstance({}, "Part", 101, false)
+
+event:Connect(function(part)
+    print("The table got a part ( " .. part .. " !")
+end)
+```
+**TableCare:UntrackIndexInstance(bind_id) is used to stop the event.. (unbind).**
+
+### TableCare:TrackToFunction(table1, function_to_execute_when_call) --> arg1: table, arg2: function
+Allow you to execute a function when the table is called as function.
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local myTable = {}
+
+local function_to_execute_when_call = function()
+    print("execute!")
+end)
+
+myTable = TableCare:TrackToFunction(myTable, function_to_execute_when_call) -- return the table argument #1 but with new meta settings.
+
+myTable() -- console will print "execute!"
+```
+
+### TableCare:ChangeIdentity(table1, table_name) --> arg1: table, arg2: string or number
+This function allow you to set a table when the table is concat (..).
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local myTable = {}
+
+myTable = TableCare:ChangeIdentity(myTable, "'yo my new name is this'")
+
+print("my new table is "..myTable) -- return in the console: my new table is 'yo my new name is this'.
+```
+
+### TableCare:PermanentLockToAccess(table1) --> arg1: table
+This function lock the table and can't be set by other functions like the ChangeIdentity functions, tracktofunction function...
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local myTable = {}
+
+myTable = TableCare:PermanentLockToAccess(myTable) --> the table is locked and can't be set by meta tables
+```
+
+### TableCare:SetDefaultIndex(table1, value) --> arg1: table, arg2: boolean or number or string or instance...
+This function allow you to return a value if a player try to get an invalid index.
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local myTable = {"yo", "my"}
+
+myTable = TableCare:SetDefaultIndex(myTable, "name")
+
+print(myTable[1]) --> print in the console: yo
+print(myTable[2]) --> print in the console: my
+print(myTable[3]) --> print in the console : name
+```
+
+### TableCare:GetTrackedEvents()
+This function return a table with all tracked events inside (like PlayerTracker...).
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local myTable = {}
+
+myTable = TableCare:GetTrackedEvents() -- return a table.
+```
+
+### TableCare:ClearLoadedTables()
+This function clear **all** loaded tables.
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+TableCare:ClearLoadedTables()
+```
+
+### TableCare:ClearTrackedEvents()
+This function clear **all** tracked events can have errors for tables set with tracked events (patch is coming).
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+TableCare:ClearTrackedEvents()
+```
 
 ### Jekyll Themes
 
