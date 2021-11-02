@@ -4,7 +4,7 @@
 	API:
 	
 	  local TableCare = require(game.ReplicatedStorage.TableCare) or require(id)
-	  Documentation: 
+	  Documentation: https://flysendeveloppement.github.io/TableCare/
 	  Version: 1.0.0
 	  
 	 
