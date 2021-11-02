@@ -80,6 +80,59 @@ wait(1)
 TableCare.unload_table(1) -- The argument #1 (1) is the saved table id argument (table_id).
 ```
 
+### TableCare.get_length(table1)
+Allow you to get the length of the table1 *(type: table)*.
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local copy_table = {"hey", "my", "name", "is", "fox"}
+
+local copy_length = TableCare.get_length(copy_table) -- return a number. (5)
+```
+
+### TableCare:GetLoadedTables()
+Return a table with all saved tables (table id saved and the table)
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local SavedTables = TableCare:GetLoadedTables() -- return a table with all saved tables inside.
+```
+
+### TableCare:LoadCareFor(table1, optional_custom_table_name, optional_basic_index)
+This function allow you to set add functions for the table, sub functions... Allow you to use the NewIndexAdded event (to detect when an index is add for your table)
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local actualTable = {}
+
+actualTable = TableCare:LoadCareFor(actualTable, "My New Name Is This", 0) -- Argument 2 set the string return when you print the table.
+
+TableCare.NewIndexAdded:Connect(function(table, index, value)
+    print(tostring(table) .. " have a new index " .. index .." and the value is " .. value
+end)
+```
+
+### TableCare:UnloadCareFor(table1)
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+local actualTable = {}
+
+actualTable = TableCare:LoadCareFor(actualTable, "My New Name Is This", 0) -- Argument 2 set the string return when you print the table.
+
+actualTable = TableCare:UnloadCareFor(actualTable) -- turn off new parameters...
+```
+
+### TableCare:TrackIndexPlayer(table, optional_bind_id, player, optional_erase) --> arg1: table, arg2: string or boolean, arg3: player or player_name (string), optional_instance: boolean
+This function allow you to know when a player is set to your table. 
+```lua
+  local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
+  local table1 = {}
+  
+  table1, event, bind_id = TableCare:TrackIndexPlayer(table1, nil, "Tom_minecraft", false)
+  
+  event:Connect(function(player)
+      print("Plaeyr is set to the table")
+  end)
+```
+**TableCare:UntrackIndexPlayer(bind_id) is used to stop the event.. (unbind).**
+
 ### Jekyll Themes
 
 Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/FlysenDeveloppement/TableCare/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
