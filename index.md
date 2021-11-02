@@ -2,12 +2,25 @@
 
 This module allow you to manage your tables more easier.
 
-### Markdown
+### Get the model:
+https://www.roblox.com/library/7879906070/TableCare
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## API Documentation:
+### How to set up?
 
+First, place the module script into the ReplicatedStorage. After, go in a Script or Local Script and put:
 ```lua
-local test =
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare) -- or: require(game.ReplicatedStorage.TableCare)
+```
+
+### TableCare.checksimilar(table1, table2)
+This function allow you to find all communs elements between 2 tables (table1 and table2) (Return a table with all commons elements)
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare) -- or: require(game.ReplicatedStorage.TableCare)
+local table1 = {"banana", "apple", "berry", "mouse", "dog", "horse"}
+local table2 = {"apple", "cat", "mouse", "fox", "fly", "give"}
+
+local common_elements = TableCare:checksimilar(table1, table2) -- return a table.
 ```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
