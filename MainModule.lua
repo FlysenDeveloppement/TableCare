@@ -3,22 +3,46 @@
 
 	API:
 	
-	  local TableCare = require(game.ReplicatedStorage.TableCare) or require(id)
-	  Documentation: https://flysendeveloppement.github.io/TableCare/
-	  Version: 1.0.0
+	  local TableCare = require(game.ReplicatedStorage.TableCare)
+	  you can also use require(7879906070) for automatic updates 
+	  Documentation: https://devforum.roblox.com/t/tablecare-v-101-module-to-manage-tables-more-easier/1533465
+	  Version: 1.0.1
 	  
 	 
 	License: 
 	
 	  Licenced under the MIT licence.     
+	  		MIT License
+
+			Copyright (c) 2021 Tom Flysen
+
+			Permission is hereby granted, free of charge, to any person obtaining a copy
+			of this software and associated documentation files (the "Software"), to deal
+			in the Software without restriction, including without limitation the rights
+			to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+			copies of the Software, and to permit persons to whom the Software is
+			furnished to do so, subject to the following conditions:
+
+			The above copyright notice and this permission notice shall be included in all
+			copies or substantial portions of the Software.
+
+			THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+			IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+			FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+			AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+			LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+			OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+			SOFTWARE.
 	  
 	Authors:
 	
-	  Flysen (@Tom_minecraft) - November 1st, 2021 - Created the file.   
+	  Flysen (@Tom_minecraft) - November 1st, 2021 - Created the file.    
+
+
 --]]
 
 
-local TableCare = {LoadedTables = {}; TrackedEvents = {};}
+local TableCare = {LoadedTables = {}; TrackedEvents = {}; ChangedIdentities = {};}
 TableCare.__index = TableCare
 
 local Signal = require(script.Signal)
@@ -27,7 +51,7 @@ TableCare.NewIndexAdded = Signal.new()
 
 local RunService = game:GetService("RunService")
 
-local function getTableType(t)
+local function _GetTableType(t)
 	local Number = 0
 	local Other = 0
 	
@@ -46,10 +70,28 @@ local function getTableType(t)
 	end
 end
 
-function spin_new_id(check_table)
+function _ChangeIdentityRetry(tab, id, add_operator)
+	if not add_operator then add_operator = 0 end
+
+	add_operator += 1
+
+	if TableCare.ChangedIdentities[id] then
+		if TableCare.ChangedIdentities[id..add_operator] then
+			_ChangeIdentityRetry(tab, id, add_operator)
+		else
+			TableCare.ChangedIdentities[id..add_operator] = tab
+			return id..add_operator
+		end
+	else
+		TableCare.ChangedIdentities[id] = tab
+		return id
+	end
+end
+
+function _SpinNewId(check_table)
 	local id = math.random(1,10000000)
 	if check_table[id] then
-		spin_new_id()
+		_SpinNewId()
 	else
 		return id
 	end
@@ -68,15 +110,14 @@ function TableCare.checksimilar(tab1, tab2)
 	return common_elements
 end
 
-function TableCare.deleteall(tab, element)
+--[[function TableCare.deleteall(tab, element)
 	if not tab then error("[TableCare]: Error for the .deleteall() function, argument #1 can't be find.") end
-	local count = 0
+	
+	local target = {}
 	
 	for k, v in pairs(tab) do
-		count = count + 1
 		if v == element then
-			table.remove(tab, v)
-			count =count- 1
+			table.remove(tab, k)
 		end
 	end
 	
@@ -87,18 +128,29 @@ function TableCare.clearwithout(tab, element_one, element_two, element_three)
 	if not tab then
 		error("[TableCare]: Error for the .clearwithout() function, argument #1 can't be find.")
 	end
-	local count= 0
 	
-	for k, v in pairs(tab) do
-		count = count + 1
-		if v ~= element_one or v ~= element_two or v ~= element_three then
-			table.remove(tab, count)
-			count = count - 1
+	for index, v in pairs(tab) do
+		local whitelist = false
+		
+		if v == element_one then
+			whitelist = true
+		end
+		
+		if v == element_two then
+			whitelist = true
+		end
+		
+		if v == element_three then
+			whitelist = true
+		end
+		
+		if whitelist == false then
+			table.remove(tab, index)
 		end
 	end
 	
 	return tab
-end
+end--]]
 
 function TableCare.kiss(tab1, tab2)
 	if not tab1 then error("[TableCare]: Error for the .kiss() function, argument #1 can't be find.") end
@@ -127,7 +179,7 @@ function TableCare.save_table(tab, id, erase)
 	
 	TableCare.LoadedTables[id] = {}
 	
-	local t = getTableType(tab)
+	local t = _GetTableType(tab)
 	
 	for k, v in pairs(tab) do
 		if t == "Dictionnary" then
@@ -144,7 +196,7 @@ function TableCare.load_table(tab_id, tab)
 	if not tab_id then error("[TableCare]: Error for the .load_table() function, argument #1 can't be find.") end
 	if not tab then tab = {} end
 	
-	local t = getTableType(TableCare.LoadedTables[tab_id])
+	local t = _GetTableType(TableCare.LoadedTables[tab_id])
 	
 	for k, v in pairs(TableCare.LoadedTables[tab_id]) do
 		if t == "Dictionnary" then
@@ -166,9 +218,9 @@ function TableCare.random_id(f)
 	local get_id 
 
 	if f == "load" then
-		get_id = spin_new_id(TableCare.LoadedTables)
+		get_id = _SpinNewId(TableCare.LoadedTables)
 	elseif f == "track_event" then
-		get_id = spin_new_id(TableCare.TrackedEvents)
+		get_id = _SpinNewId(TableCare.TrackedEvents)
 	else
 		get_id = math.random(1,10000000000)
 	end
@@ -312,7 +364,7 @@ function TableCare:TrackIndexPlayer(tab, bind_id, player, erase)
 		end
 	end
 	if not bind_id then
-		bind_id = spin_new_id(self.TrackedEvents)
+		bind_id = _SpinNewId(self.TrackedEvents)
 	end
 	if self.TrackedEvents[bind_id] then
 		if erase == true then
@@ -359,7 +411,7 @@ function TableCare:TrackIndexInstance(tab, inst, bind_id, erase)
 	end
 	
 	if not bind_id then
-		bind_id = spin_new_id(self.TrackedEvents)
+		bind_id = _SpinNewId(self.TrackedEvents)
 	end
 	
 	if self.TrackedEvents[bind_id] then
@@ -426,9 +478,15 @@ function TableCare:ChangeIdentity(tab, id)
 		id = math.random(1,10000000)
 	end
 	
+	local get_real_id = _ChangeIdentityRetry(tab, id)
+	
 	local meta = {
 		__concat = function(t1, t2)
-			return id
+			if self.ChangedIdentities[get_real_id] == t1 then
+				return get_real_id .. t2
+			else
+				return t1 .. get_real_id
+			end
 		end,
 	}
 	
