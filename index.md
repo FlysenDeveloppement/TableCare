@@ -23,7 +23,7 @@ local table2 = {"apple", "cat", "mouse", "fox", "fly", "give"}
 local common_elements = TableCare.checksimilar(table1, table2) -- return a table.
 ```
 
-### TableCare.deleteall(table1, elements)
+### TableCare.deleteall(table1, elements) --> not working for the moment.
 If element value is equal to the elements argument then, it will be delete.
 ```lua
 local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
@@ -32,7 +32,7 @@ local table1 = {"banana", "apple", "berry", "mouse", "dog", "berry", "horse", "b
 table1 = TableCare.deleteall(table1, "berry") -- return a table ({"banana", "apple", "mouse", "dog", "horse"})
 ```
 
-### TableCare.clearwithout(tab, optional_element, optional_element2, optional_element3)
+### TableCare.clearwithout(tab, optional_element, optional_element2, optional_element3) --> not working for the moment.
 Allow you to clear all elements of the table except optional_element, optional_element2 and optional_element3
 ```lua
 local TableCare = require(game:GetService("ReplicatedStorage").TableCare)
