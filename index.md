@@ -3,7 +3,7 @@
 This module allow you to manage your tables more easier.
 
 ### Get the model:
-https://www.roblox.com/library/7879906070/TableCare
+[Get the Roblox Model](https://www.roblox.com/library/7879906070/TableCare)
 
 ## API Documentation:
 ### How to set up?
@@ -20,10 +20,17 @@ local TableCare = require(game:GetService("ReplicatedStorage").TableCare) -- or:
 local table1 = {"banana", "apple", "berry", "mouse", "dog", "horse"}
 local table2 = {"apple", "cat", "mouse", "fox", "fly", "give"}
 
-local common_elements = TableCare:checksimilar(table1, table2) -- return a table.
+local common_elements = TableCare.checksimilar(table1, table2) -- return a table.
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### TableCare.deleteall(table1, elements)
+If element value is equal to the elements argument then, it will be delete.
+```lua
+local TableCare = require(game:GetService("ReplicatedStorage").TableCare) -- or: require(game.ReplicatedStorage.TableCare)
+local table1 = {"banana", "apple", "berry", "mouse", "dog", "berry", "horse", "berry"}
+
+table1 = TableCare.deleteall(table1, "berry") -- return a table ({"banana", "apple", "mouse", "dog", "horse"})
+```
 
 ### Jekyll Themes
 
